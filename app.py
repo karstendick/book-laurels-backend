@@ -1,6 +1,7 @@
 from flask import Flask
 import psycopg2
 from psycopg2 import pool
+from psycopg2.extras import RealDictCursor
 import os
 
 DB_HOST = os.environ["DB_HOST"]
@@ -25,19 +26,22 @@ conn_pool = psycopg2.pool.ThreadedConnectionPool(
 
 @app.route("/hello")
 def hello():
+    conn = conn_pool.getconn()
     try:
-        conn = conn_pool.getconn()
-        cursor = conn.cursor()
-        cursor.execute("select * from foo")
-        recs = cursor.fetchall()
-        s = ""
-        for row in recs:
-            s += str(row)
-        cursor.close()
-        return "Hello, World! " + s
+        with conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                cursor.execute("select * from foo")
+                recs = cursor.fetchall()
+                print(recs)
+                s = ""
+                for row in recs:
+                    print(row["name"])
+                    s += str(row)
+                cursor.close()
+                return "Hello, World! " + s
     finally:
-        if conn and conn_pool:
-            conn_pool.putconn(conn)
+        conn.close()
+        conn_pool.putconn(conn)
 
 
 if __name__ == "__main__":
