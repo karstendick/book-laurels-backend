@@ -3,14 +3,17 @@ import psycopg2
 from psycopg2 import pool
 from psycopg2.extras import RealDictCursor
 import os
+import json
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
 
 DB_HOST = os.environ["DB_HOST"]
 DB_PORT = os.environ["DB_PORT"]
 DB_USER = os.environ["DB_USER"]
 DB_PASSWORD = os.environ["DB_PASSWORD"]
 DB_DATABASE = os.environ["DB_DATABASE"]
-
-app = Flask(__name__)
 
 
 conn_pool = psycopg2.pool.ThreadedConnectionPool(

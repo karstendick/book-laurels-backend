@@ -5,6 +5,7 @@ black==19.3b0
 cfgv==2.0.0
 Click==7.0
 Flask==1.0.3
+Flask-Cors==3.0.8
 identify==1.4.5
 importlib-metadata==0.18
 importlib-resources==1.0.2
