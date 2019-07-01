@@ -35,13 +35,12 @@ def hello():
             with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                 cursor.execute("select * from foo")
                 recs = cursor.fetchall()
-                print(recs)
-                s = ""
-                for row in recs:
-                    print(row["name"])
-                    s += str(row)
+                # s = ""
+                # for row in recs:
+                #     s += str(row)
                 cursor.close()
-                return "Hello, World! " + s
+                # return "Hello, World! " + s
+                return json.dumps(recs, default=str)
     finally:
         conn.close()
         conn_pool.putconn(conn)
